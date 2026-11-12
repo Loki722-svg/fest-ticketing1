@@ -1,0 +1,20 @@
+version: 2
+updates:
+  - package-ecosystem: pip
+    directory: /booking-service
+    schedule: { interval: weekly }
+    open-pull-requests-limit: 3
+    labels: [devops]
+  - package-ecosystem: pip
+    directory: /payment-service
+    schedule: { interval: weekly }
+    open-pull-requests-limit: 3
+    labels: [devops]
+  - package-ecosystem: docker
+    directories: [/booking-service, /payment-service, /frontend]
+    schedule: { interval: weekly }
+    labels: [devops]
+  - package-ecosystem: github-actions
+    directory: /
+    schedule: { interval: weekly }
+    labels: [devops]

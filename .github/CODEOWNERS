@@ -1,0 +1,14 @@
+# Each line: path  ->  who is automatically asked to review changes to it.
+# REPLACE the placeholders below with your teammates' real GitHub usernames
+# (keep the @ sign), e.g. @lokesh-m. The last matching line wins.
+
+*                    @MEMBER1
+/.github/            @MEMBER1
+/terraform/          @MEMBER1
+/scripts/            @MEMBER1
+/booking-service/    @MEMBER2
+/payment-service/    @MEMBER3
+docker-compose.yml   @MEMBER3
+Dockerfile           @MEMBER3
+/frontend/           @MEMBER4
+/docs/               @MEMBER5

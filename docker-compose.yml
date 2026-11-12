@@ -1,0 +1,50 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: fest
+      POSTGRES_PASSWORD: fest
+      POSTGRES_DB: fest
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U fest"]
+      interval: 5s
+      retries: 10
+
+  payment-service:
+    build: ./payment-service
+    ports: ["8001:8001"]
+
+  booking-service:
+    build: ./booking-service
+    environment:
+      DATABASE_URL: postgresql://fest:fest@db:5432/fest
+      PAYMENT_URL: http://payment-service:8001
+      ADMIN_USER: ${ADMIN_USER:-admin}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-admin123}
+      SECRET_KEY: ${SECRET_KEY:-change-me-in-production}
+      SMTP_HOST: mailpit
+      SMTP_PORT: "1025"
+      REMINDER_INTERVAL_SECONDS: "3600"
+    depends_on:
+      db:
+        condition: service_healthy
+      payment-service:
+        condition: service_started
+      mailpit:
+        condition: service_started
+    ports: ["8000:8000"]
+
+  # Test mail server: every reminder email shows up at http://localhost:8025
+  mailpit:
+    image: axllent/mailpit
+    ports: ["8025:8025"]
+
+  frontend:
+    build: ./frontend
+    depends_on: [booking-service]
+    ports: ["8080:80"]
+
+volumes:
+  pgdata:
